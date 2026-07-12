@@ -8,6 +8,8 @@ Required:
     - name
     - resource_group_name
     - shared_access_policy_key
+    - shared_access_policy_key_key_vault_id (alternative to shared_access_policy_key - read from Key Vault instead)
+    - shared_access_policy_key_key_vault_secret_name (alternative to shared_access_policy_key - read from Key Vault instead)
     - shared_access_policy_name
     - stream_analytics_job_name
     - serialization (block):
@@ -17,14 +19,16 @@ Required:
 EOT
 
   type = map(object({
-    endpoint                     = string
-    eventhub_consumer_group_name = string
-    iothub_namespace             = string
-    name                         = string
-    resource_group_name          = string
-    shared_access_policy_key     = string
-    shared_access_policy_name    = string
-    stream_analytics_job_name    = string
+    endpoint                                       = string
+    eventhub_consumer_group_name                   = string
+    iothub_namespace                               = string
+    name                                           = string
+    resource_group_name                            = string
+    shared_access_policy_key                       = string
+    shared_access_policy_key_key_vault_id          = optional(string)
+    shared_access_policy_key_key_vault_secret_name = optional(string)
+    shared_access_policy_name                      = string
+    stream_analytics_job_name                      = string
     serialization = object({
       encoding        = optional(string)
       field_delimiter = optional(string)
