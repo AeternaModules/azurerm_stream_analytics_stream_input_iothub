@@ -1,3 +1,7 @@
+output "stream_analytics_stream_input_iothubs_id" {
+  description = "Map of id values across all stream_analytics_stream_input_iothubs, keyed the same as var.stream_analytics_stream_input_iothubs"
+  value       = { for k, v in azurerm_stream_analytics_stream_input_iothub.stream_analytics_stream_input_iothubs : k => v.id }
+}
 output "stream_analytics_stream_input_iothubs_endpoint" {
   description = "Map of endpoint values across all stream_analytics_stream_input_iothubs, keyed the same as var.stream_analytics_stream_input_iothubs"
   value       = { for k, v in azurerm_stream_analytics_stream_input_iothub.stream_analytics_stream_input_iothubs : k => v.endpoint }
