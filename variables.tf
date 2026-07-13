@@ -8,8 +8,8 @@ Required:
     - name
     - resource_group_name
     - shared_access_policy_key
-    - shared_access_policy_key_key_vault_id (alternative to shared_access_policy_key - read from Key Vault instead)
-    - shared_access_policy_key_key_vault_secret_name (alternative to shared_access_policy_key - read from Key Vault instead)
+    - shared_access_policy_key_key_vault_id (optional, alternative to shared_access_policy_key)
+    - shared_access_policy_key_key_vault_secret_name (optional, alternative to shared_access_policy_key)
     - shared_access_policy_name
     - stream_analytics_job_name
     - serialization (block):
@@ -35,66 +35,16 @@ EOT
       type            = string
     })
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.stream_analytics_job_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.endpoint) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.iothub_namespace) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.eventhub_consumer_group_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.shared_access_policy_key) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.stream_analytics_stream_input_iothubs : (
-        length(v.shared_access_policy_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_stream_analytics_stream_input_iothub's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
   # Review, translate into a real validation{} block above, and delete once confirmed.
+  # path: name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: stream_analytics_job_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: resource_group_name
   #   condition: length(value) <= 90
   #   message:   [from resourcegroups.ValidateName: invalid when len(value) > 90]
@@ -109,5 +59,27 @@ EOT
   #   source:    [from resourcegroups.ValidateName: invalid when len(value) == 0]
   # path: resource_group_name
   #   source:    [from resourcegroups.ValidateName] !matched
+  # path: endpoint
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: iothub_namespace
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: eventhub_consumer_group_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: shared_access_policy_key
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: shared_access_policy_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: serialization.type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: serialization.field_delimiter
+  #   condition: contains([" ", ",", "\t", "|", ";"], value)
+  #   message:   must be one of:  , ,, 	, |, ;
+  # path: serialization.encoding
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
 }
 
